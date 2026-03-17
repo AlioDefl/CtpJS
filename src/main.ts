@@ -17,7 +17,7 @@ const scores: StudentScore[] = [
 const popup = new Popup('.popup');
 const footerLink = document.querySelector('footer a');
 if (footerLink) {
-	footerLink.addEventListener('click', (e) => {
+	footerLink.addEventListener('click', e => {
 		e.preventDefault();
 		popup.open();
 	});
@@ -40,13 +40,42 @@ function displayScores(scoresArray: StudentScore[]): void {
 
 		const span = document.createElement('span');
 		span.textContent = String(student.score);
-		
+
 		li.appendChild(em);
 		li.appendChild(strong);
 		li.appendChild(span);
 		boardElement.appendChild(li);
 	});
-	
 }
 
 displayScores(scores);
+
+async function loadScoresFromAPI(): Promise<void> {
+	const boardElement = document.querySelector('.board');
+	if (!boardElement) {
+		return;
+	}
+
+	boardElement.classList.add('is-loading');
+
+	try {
+		const response = await fetch('./api/scores.json');
+		const data: StudentScore[] = await response.json();
+
+		await new Promise(resolve => setTimeout(resolve, 1000));
+
+		boardElement.classList.remove('is-loading');
+
+		displayScores(data);
+	} catch (error) {
+		console.error('Erreur lors du chargement des scores:', error);
+		boardElement.classList.remove('is-loading');
+	}
+}
+
+const refreshButton = document.querySelector('.refreshButton');
+if (refreshButton) {
+	refreshButton.addEventListener('click', () => {
+		loadScoresFromAPI();
+	});
+}
