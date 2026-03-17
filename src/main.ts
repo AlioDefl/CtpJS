@@ -14,6 +14,8 @@ const scores: StudentScore[] = [
 	{ score: 0, name: 'Les autres' },
 ];
 
+let currentScores: StudentScore[] = scores;
+
 const popup = new Popup('.popup');
 const footerLink = document.querySelector('footer a');
 if (footerLink) {
@@ -23,14 +25,16 @@ if (footerLink) {
 	});
 }
 
-function displayScores(scoresArray: StudentScore[]): void {
+function displayScores(scoresArray: StudentScore[], limit?: number): void {
 	const boardElement = document.querySelector('.board');
 	if (!boardElement) {
 		return;
 	}
 	boardElement.innerHTML = '';
 
-	scoresArray.forEach((student, index) => {
+	const scoresToDisplay = limit ? scoresArray.slice(0, limit) : scoresArray;
+
+	scoresToDisplay.forEach((student, index) => {
 		const li = document.createElement('li');
 		const em = document.createElement('em');
 		em.textContent = `${index + 1}.`;
@@ -48,7 +52,7 @@ function displayScores(scoresArray: StudentScore[]): void {
 	});
 }
 
-displayScores(scores);
+displayScores(currentScores);
 
 async function loadScoresFromAPI(): Promise<void> {
 	const boardElement = document.querySelector('.board');
@@ -66,7 +70,8 @@ async function loadScoresFromAPI(): Promise<void> {
 
 		boardElement.classList.remove('is-loading');
 
-		displayScores(data);
+		currentScores = data;
+		displayScores(currentScores);
 	} catch (error) {
 		console.error('Erreur lors du chargement des scores:', error);
 		boardElement.classList.remove('is-loading');
@@ -77,5 +82,21 @@ const refreshButton = document.querySelector('.refreshButton');
 if (refreshButton) {
 	refreshButton.addEventListener('click', () => {
 		loadScoresFromAPI();
+	});
+}
+
+const showPodiumLink = document.querySelector('.showPodium');
+if (showPodiumLink) {
+	showPodiumLink.addEventListener('click', (e) => {
+		e.preventDefault();
+		displayScores(currentScores, 3);
+	});
+}
+
+const showFullListLink = document.querySelector('.showFullList');
+if (showFullListLink) {
+	showFullListLink.addEventListener('click', (e) => {
+		e.preventDefault();
+		displayScores(currentScores);
 	});
 }
