@@ -1,0 +1,21 @@
+{
+  "name": "ctp2025",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "type": "module",
+  "description": "CTP de JS pour l'IUT de Lille - reproduction interdite",
+  "author": "Thomas Fritsch <thomas.fritsch@univ-lille.fr> (https://gitlab.univ-lille.fr/thomas.fritsch)",
+  "homepage": "https://gitlab.univ-lille.fr/js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "vite --port=8000",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0"
+  }
+}
